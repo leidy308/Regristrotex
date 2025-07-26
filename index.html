@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro Entrada y Salida - Texsion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Variables CSS para colores y espaciados */
+    :root {
+      --primary-color: #0b6efd;
+      --primary-dark: #084298;
+      --secondary-color: #28a745;
+      --secondary-dark: #218838;
+      --light-bg: #f5f5f5;
+      --white-bg: #ffffff;
+      --border-color: #ccc;
+      --text-color: #333;
+      --font-family: 'Roboto', Arial, sans-serif;
+      --spacing-small: 10px;
+      --spacing-medium: 15px;
+      --spacing-large: 20px;
+      --border-radius: 4px;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--light-bg);
+      margin: 0;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-large);
+      box-sizing: border-box; /* Asegura que el padding no aumente el ancho */
+    }
+
+    header {
+      background: var(--white-bg);
+      padding: var(--spacing-large) 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: var(--spacing-large);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: var(--primary-dark);
+      margin-top: 0;
+      margin-bottom: var(--spacing-medium);
+    }
+
+    h1 {
+      font-size: 2.2em;
+    }
+
+    h2 {
+      font-size: 1.8em;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: var(--spacing-small);
+      margin-top: var(--spacing-large);
+    }
+
+    form, .form-section {
+      background: var(--white-bg);
+      padding: var(--spacing-large);
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: var(--spacing-large);
+    }
+
+    label {
+      display: block;
+      margin-top: var(--spacing-small);
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--text-color);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: calc(100% - 16px);
+      padding: 8px;
+      margin-bottom: var(--spacing-small);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+      font-family: var(--font-family);
+      font-size: 1em;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(11, 110, 253, 0.25);
+    }
+
+    /* Estilos para grupos de checkboxes/radios */
+    .checkbox-group, .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-small);
+      margin-bottom: var(--spacing-medium);
+      padding: var(--spacing-small) 0;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      background: #fdfdfd;
+    }
+
+    .checkbox-group label, .radio-group label {
+      font-weight: normal;
+      display: inline-flex;
+      align-items: center;
+      margin-right: var(--spacing-small);
+      margin-left: var(--spacing-small);
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"], .radio-group input[type="radio"] {
+        margin-right: 5px;
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    /* Botones generales */
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      margin-top: var(--spacing-medium);
+      margin-right: var(--spacing-small);
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s ease, transform 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--secondary-dark);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* Contenedor de columnas flexible */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-medium);
+      margin-bottom: var(--spacing-medium);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-small);
+    }
+
+    /* Estilos de la tabla */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto; /* Permite el scroll horizontal en la tabla en pantallas pequeñas */
+        margin-top: var(--spacing-large);
+        margin-bottom: var(--spacing-large);
+    }
+
+    table {
+      width: 100%;
+      min-width: 800px; /* Ancho mínimo para la tabla si es demasiado estrecha */
+      border-collapse: collapse;
+      background: var(--white-bg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--primary-color);
+      color: #fff;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Firma digital */
+    canvas {
+      border: 1px solid var(--border-color);
+      background: #fdfdfd;
+      margin-top: var(--spacing-small);
+      touch-action: none;
+      display: block;
+      border-radius: var(--border-radius);
+      width: 100%;
+      max-width: 400px;
+      height: 150px;
+      box-sizing: border-box;
+    }
+
+    /* Estilos para los recibos POS */
+    .pos-box {
+      border: 1px dashed #aaa;
+      background: var(--white-bg);
+      padding: var(--spacing-medium);
+      margin-top: var(--spacing-medium);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .pos-box h3 {
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: var(--spacing-small);
+        font-size: 1.1em;
+        color: var(--primary-dark);
+    }
+
+    .pos-box img {
+        display: block;
+        margin: var(--spacing-small) auto;
+        border: 1px solid #eee;
+        max-width: 150px;
+        height: auto;
+    }
+
+    .pos-actions {
+        display: flex;
+        gap: var(--spacing-small);
+        margin-top: var(--spacing-small);
+        justify-content: center;
+    }
+
+    #reciboPos {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      overflow-y: auto;
+    }
+
+    #reciboPos.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #reciboPos .recibo-content {
+      background: white;
+      padding: var(--spacing-large);
+      border: 1px solid #eee;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      max-width: 300px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.4;
+      color: black;
+      text-align: center;
+    }
+
+    #reciboPos .recibo-content p {
+        margin: 5px 0;
+        text-align: left;
+    }
+
+    #reciboPos .recibo-content img {
+        margin: 10px auto;
+        display: block;
+        max-width: 150px;
+    }
+
+    #reciboPos .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    }
+
+    /* Media queries para responsividad */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-medium);
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+      h2 {
+        font-size: 1.5em;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .checkbox-group label, .radio-group label {
+        flex-basis: 45%;
+      }
+      /* Ajustes para tabla en móviles */
+      .table-responsive {
+        overflow-x: auto; /* Asegura el scroll horizontal */
+      }
+      table {
+        min-width: 600px; /* Asegura un ancho mínimo para que la tabla sea legible */
+      }
+      /* Desactivar apilamiento para mantener la estructura de tabla tradicional */
+      /* Si prefieres el apilamiento, puedes descomentar esto:
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      td {
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        text-align: left;
+      }
+      */
+    }
+
+    /* Estilos de impresión */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #reciboPos, #reciboPos * {
+        visibility: visible !important;
+      }
+      #reciboPos {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        background: white !important;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+        display: block;
+        opacity: 1;
+      }
+      #reciboPos .recibo-content {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        width: 100%;
+        max-width: none;
+      }
+      #reciboPos .close-btn {
+          display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Registro Entrada y Salida<br>Servicios Especiales Texsion</h1>
+    </header>
+
+    <main>
+      <section class="form-section">
+        <h2>Nuevo Registro</h2>
+        <form id="registroForm" aria-labelledby="form-heading">
+          <p id="form-heading" class="sr-only">Formulario de registro de movimientos</p>
+
+          <div class="form-group">
+            <label for="movimiento">Tipo de Movimiento</label>
+            <select id="movimiento" name="movimiento" required aria-required="true">
+              <option value="">Seleccione</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Salida">Salida</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="oc">OC (Orden de Compra)</label>
+              <input type="text" id="oc" name="oc" required aria-required="true" placeholder="Ej: OC12345" />
+            </div>
+            <div class="form-group">
+              <label for="unidades">Unidades</label>
+              <input type="number" id="unidades" name="unidades" required min="1" placeholder="Solo números" />
+            </div>
+            <div class="form-group">
+              <label for="costeo">Costeo (ud)</label>
+              <input type="number" id="costeo" name="costeo" step="0.01" placeholder="Ej: 15.50 (opcional)" />
+            </div>
+          </div>
+
+          <fieldset class="checkbox-group">
+            <legend>Tipo de Producto</legend>
+            <label><input type="checkbox" name="tipo" value="Armada"> Armada</label>
+            <label><input type="checkbox" name="tipo" value="En pieza"> En pieza</label>
+            <label><input type="checkbox" name="tipo" value="Muestra"> Muestra</label>
+            <label><input type="checkbox" name="tipo" value="Producción"> Producción</label>
+          </fieldset>
+
+          <fieldset class="checkbox-group">
+            <legend>Componentes</legend>
+            <label><input type="checkbox" name="componente" value="Frentes"> Frentes</label>
+            <label><input type="checkbox" name="componente" value="Espaldas"> Espaldas</label>
+            <label><input type="checkbox" name="componente" value="Delanteros"> Delanteros</label>
+            <label><input type="checkbox" name="componente" value="Bolsillos"> Bolsillos</label>
+            <label><input type="checkbox" name="componente" value="Mangas"> Mangas</label>
+            <label><input type="checkbox" name="componente" value="Tela"> Tela</label>
+            <label><input type="checkbox" name="componente" value="Pretina"> Pretina</label>
+            <label><input type="checkbox" name="componente" value="Otros"> Otros</label>
+          </fieldset>
+
+          <fieldset class="radio-group">
+            <legend>Liquidación</legend>
+            <label><input type="radio" name="liquidacion" value="Sí" required> Sí</label>
+            <label><input type="radio" name="liquidacion" value="No" required> No</label>
+          </fieldset>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="entrega">Quién Entrega</label>
+              <input type="text" id="entrega" name="entrega" required placeholder="Nombre de la persona que entrega" />
+            </div>
+            <div class="form-group">
+              <label for="recibe">Quién Recibe</label>
+              <input type="text" id="recibe" name="recibe" required placeholder="Nombre de la persona que recibe" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea id="observaciones" name="observaciones" rows="3" placeholder="Notas adicionales (opcional)"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="producto_tipo">Tipo de Prenda</label>
+            <select id="producto_tipo" name="producto_tipo" required aria-required="true">
+              <option value="">Seleccione</option>
+              <option value="Camisa">Camisa</option>
+              <option value="Polo">Polo</option>
+              <option value="Jean">Jean</option>
+              <option value="Bermuda">Bermuda</option>
+              <option value="Jogger">Jogger</option>
+              <option value="Buzo">Buzo</option>
+              <option value="Tshirt">Tshirt</option>
+              <option value="Chaqueta">Chaqueta</option>
+              <option value="Vestido">Vestido</option>
+              <option value="Blusa">Blusa</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="firmaCanvas">Firma Digital</label>
+            <canvas id="firmaCanvas" width="400" height="150" aria-label="Área para firma digital"></canvas>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="app.limpiarFirma()">Limpiar Firma</button>
+              <button type="button" class="btn" onclick="app.guardarRegistro()">Guardar Registro</button>
+              <button type="reset" class="btn btn-danger">Borrar Todo</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="form-section">
+        <h2>Historial de Registros</h2>
+        <input type="text" id="filtroBusqueda" placeholder="Buscar en historial (OC, producto, etc.)..." onkeyup="app.mostrarHistorial()" aria-label="Campo de búsqueda en el historial" />
+        <div class="table-responsive"> <table id="tablaHistorial" aria-live="polite">
+                <thead>
+                    <tr>
+                        <th data-label="Fecha">Fecha</th>
+                        <th data-label="Movimiento">Movimiento</th>
+                        <th data-label="OC">OC</th>
+                        <th data-label="Unidades">Unidades</th>
+                        <th data-label="Costeo">Costeo</th>
+                        <th data-label="Tipo">Tipo</th>
+                        <th data-label="Componentes">Componentes</th>
+                        <th data-label="Liquidación">Liquidación</th>
+                        <th data-label="Entrega">Entrega</th>
+                        <th data-label="Recibe">Recibe</th>
+                        <th data-label="Producto">Producto</th>
+                        <th data-label="Observaciones">Observaciones</th>
+                        <th data-label="Opciones">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-secondary" onclick="app.exportarExcel()">Exportar a Excel</button>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Historial de Recibos POS</h2>
+        <div id="historialPos">
+          </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="reciboPos" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="recibo-title">
+    <div class="recibo-content">
+        <button class="close-btn" onclick="app.cerrarReciboPos()" aria-label="Cerrar recibo">X</button>
+        <h3 id="recibo-title">* SERVICIOS ESPECIALES TEXSION *</h3>
+        </div>
+  </div>
+
+<script>
+  const app = {
+    canvas: document.getElementById('firmaCanvas'),
+    ctx: null,
+    dibujando: false,
+    fontSize: 14, // Tamaño de fuente inicial para el recibo POS
+    debounceTimeout: null,
+
+    init() {
+      if (this.canvas) {
+        this.ctx = this.canvas.getContext('2d');
+        this.addSignatureListeners();
+      }
+
+      this.mostrarHistorial();
+      this.mostrarHistorialPos();
+
+      document.getElementById('registroForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.guardarRegistro();
+      });
+    },
+
+    // --- Funciones de Firma Digital ---
+    addSignatureListeners() {
+      this.canvas.addEventListener("mousedown", this.iniciarDibujo.bind(this));
+      this.canvas.addEventListener("mouseup", this.terminarDibujo.bind(this));
+      this.canvas.addEventListener("mousemove", this.dibujar.bind(this));
+      this.canvas.addEventListener("touchstart", this.iniciarDibujo.bind(this), { passive: false });
+      this.canvas.addEventListener("touchend", this.terminarDibujo.bind(this), { passive: false });
+      this.canvas.addEventListener("touchmove", this.dibujar.bind(this), { passive: false });
+    },
+
+    getCoords(e) {
+      const rect = this.canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    },
+
+    iniciarDibujo(e) {
+      this.dibujando = true;
+      const { x, y } = this.getCoords(e);
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+      e.preventDefault();
+    },
+
+    terminarDibujo(e) {
+      this.dibujando = false;
+      this.ctx.beginPath();
+      e.preventDefault();
+    },
+
+    dibujar(e) {
+      if (!this.dibujando) return;
+      const { x, y } = this.getCoords(e);
+      this.ctx.lineWidth = 2;
+      this.ctx.lineCap = "round";
+      this.ctx.strokeStyle = "black";
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      e.preventDefault();
+    },
+
+    limpiarFirma() {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+
+    // --- Funciones de Almacenamiento y Gestión de Datos ---
+    getRegistros() {
+      try {
+        const registros = localStorage.getItem('registros');
+        return registros ? JSON.parse(registros) : [];
+      } catch (e) {
+        console.error("Error al leer registros de localStorage:", e);
+        return [];
+      }
+    },
+
+    setRegistros(registros) {
+      try {
+        localStorage.setItem('registros', JSON.stringify(registros));
+      } catch (e) {
+        console.error("Error al guardar registros en localStorage:", e);
+        alert("No se pudieron guardar los datos. El almacenamiento podría estar lleno.");
+      }
+    },
+
+    guardarRegistro() {
+      const form = document.forms['registroForm'];
+
+      if (!form.reportValidity()) {
+        alert("Por favor, complete todos los campos requeridos.");
+        return;
+      }
+
+      const registro = {
+        fecha: new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+        movimiento: form.movimiento.value,
+        oc: form.oc.value.trim().toUpperCase(),
+        unidades: parseInt(form.unidades.value),
+        costeo: parseFloat(form.costeo.value || 0).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), // Formato de moneda
+        tipo: Array.from(form.querySelectorAll('input[name="tipo"]:checked')).map(c => c.value).join(", "),
+        componentes: Array.from(form.querySelectorAll('input[name="componente"]:checked')).map(c => c.value).join(", "),
+        liquidacion: form.liquidacion.value,
+        entrega: form.entrega.value.trim(),
+        recibe: form.recibe.value.trim(),
+        observaciones: form.observaciones.value.trim(),
+        producto_tipo: form.producto_tipo.value,
+        firma: this.canvas.toDataURL('image/png')
+      };
+
+      let registros = this.getRegistros();
+      registros.push(registro);
+      this.setRegistros(registros);
+
+      alert('¡Registro guardado exitosamente!');
+      form.reset();
+      this.limpiarFirma();
+      this.mostrarHistorial();
+      this.mostrarHistorialPos();
+    },
+
+    eliminarRegistro(index) {
+      if (!confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+        return;
+      }
+      let registros = this.getRegistros();
+      registros.splice(index, 1);
+      this.setRegistros(registros);
+      this.mostrarHistorial();
+      this.mostrarHistorialPos();
+      alert('Registro eliminado.');
+    },
+
+    // --- Funciones de Visualización de Historial ---
+    mostrarHistorial() {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        const registros = this.getRegistros();
+        const filtroTexto = document.getElementById("filtroBusqueda").value.toLowerCase();
+        const tbody = document.querySelector("#tablaHistorial tbody");
+        tbody.innerHTML = "";
+
+        registros.forEach((r, i) => {
+          const textoBusqueda = `${r.fecha} ${r.movimiento} ${r.oc} ${r.unidades} ${r.costeo} ${r.tipo} ${r.componentes} ${r.liquidacion} ${r.entrega} ${r.recibe} ${r.producto_tipo} ${r.observaciones}`.toLowerCase();
+
+          if (textoBusqueda.includes(filtroTexto)) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${r.fecha}</td>
+              <td>${r.movimiento}</td>
+              <td>${r.oc}</td>
+              <td>${r.unidades}</td>
+              <td>${r.costeo}</td>
+              <td>${r.tipo || 'N/A'}</td>
+              <td>${r.componentes || 'N/A'}</td>
+              <td>${r.liquidacion || 'N/A'}</td>
+              <td>${r.entrega}</td>
+              <td>${r.recibe}</td>
+              <td>${r.producto_tipo}</td>
+              <td>${r.observaciones || 'N/A'}</td>
+              <td>
+                <button class="btn small-btn" title="Imprimir Recibo" onclick="app.imprimirRegistro(${i})">🖨</button>
+                <button class="btn small-btn btn-danger" title="Eliminar Registro" onclick="app.eliminarRegistro(${i})">❌</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          }
+        });
+
+        if (registros.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No hay registros disponibles.</td></tr>';
+        } else if (tbody.children.length === 0) {
+             tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No se encontraron resultados para su búsqueda.</td></tr>';
+        }
+      }, 300);
+    },
+
+    mostrarHistorialPos() {
+      const registros = this.getRegistros();
+      const container = document.getElementById('historialPos');
+      container.innerHTML = "";
+
+      if (registros.length === 0) {
+          container.innerHTML = '<p style="text-align: center; margin-top: 20px;">No hay recibos POS para mostrar.</p>';
+          return;
+      }
+
+      registros.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.className = "pos-box";
+        div.innerHTML = `
+          <h3>* SERVICIOS ESPECIALES TEXSION *</h3>
+          <p><strong>Fecha:</strong> ${r.fecha}</p>
+          <p><strong>Movimiento:</strong> ${r.movimiento}</p>
+          <p><strong>OC:</strong> ${r.oc}</p>
+          <p><strong>Unidades:</strong> ${r.unidades}</p>
+          <p><strong>Costeo:</strong> $${r.costeo}</p>
+          <p><strong>Tipo:</strong> ${r.tipo || 'N/A'}</p>
+          <p><strong>Componentes:</strong> ${r.componentes || 'N/A'}</p>
+          <p><strong>Producto:</strong> ${r.producto_tipo}</p>
+          <p><strong>Liquidación:</strong> ${r.liquidacion || 'N/A'}</p>
+          <p><strong>Entrega:</strong> ${r.entrega}</p>
+          <p><strong>Recibe:</strong> ${r.recibe}</p>
+          <p><strong>Obs:</strong> ${r.observaciones || 'N/A'}</p>
+          ${r.firma ? `<img src="${r.firma}" alt="Firma Digital" />` : '<p>Sin firma digital</p>'}
+          <div class="pos-actions">
+            <button class="btn small-btn" onclick="app.imprimirRegistro(${i})">🖨 Imprimir Recibo</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    },
+
+    // --- Funciones de Impresión ---
+    imprimirRegistro(index) {
+      const registros = this.getRegistros();
+      const r = registros[index];
+      const reciboPosDiv = document.getElementById('reciboPos');
+      const reciboContentDiv = reciboPosDiv.querySelector('.recibo-content');
+
+      reciboContentDiv.innerHTML = `
+        <button class="close-btn" onclick="app.cerrarReciboPos()" aria-label="Cerrar recibo">X</button>
+        <h3 id="recibo-title">* SERVICIOS ESPECIALES TEXSION *</h3>
+        <p style="font-size: ${this.fontSize}px;"><strong>Fecha:</strong> ${r.fecha}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Movimiento:</strong> ${r.movimiento}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>OC:</strong> ${r.oc}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Unidades:</strong> ${r.unidades}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Costeo:</strong> $${r.costeo}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Tipo:</strong> ${r.tipo || 'N/A'}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Componentes:</strong> ${r.componentes || 'N/A'}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Producto:</strong> ${r.producto_tipo}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Liquidación:</strong> ${r.liquidacion || 'N/A'}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Entrega:</strong> ${r.entrega}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Recibe:</strong> ${r.recibe}</p>
+        <p style="font-size: ${this.fontSize}px;"><strong>Obs:</strong> ${r.observaciones || 'N/A'}</p>
+        ${r.firma ? `<img src="${r.firma}" alt="Firma Digital" style="width:150px;margin-top:10px;"/>` : '<p style="font-size: 12px; margin-top: 10px;">Sin firma digital</p>'}
+        <p style="font-size: ${this.fontSize}px; margin-top: 20px;">------------------------</p>
+        <p style="font-size: ${this.fontSize}px;">Gracias por su registro.</p>
+        <div class="pos-actions" style="justify-content: space-around; margin-top: 20px;">
+            <button class="btn small-btn" onclick="app.ajustarFuenteRecibo(-2)" title="Reducir fuente">-</button>
+            <button class="btn small-btn" onclick="app.ajustarFuenteRecibo(2)" title="Aumentar fuente">+</button>
+            <button class="btn small-btn btn-secondary" onclick="window.print()">Imprimir Ahora</button>
+        </div>
+      `;
+
+      reciboPosDiv.classList.add('active');
+      reciboPosDiv.setAttribute('aria-hidden', 'false');
+    },
+
+    cerrarReciboPos() {
+        const reciboPosDiv = document.getElementById('reciboPos');
+        reciboPosDiv.classList.remove('active');
+        reciboPosDiv.setAttribute('aria-hidden', 'true');
+    },
+
+    ajustarFuenteRecibo(delta) {
+        this.fontSize = Math.max(8, Math.min(24, this.fontSize + delta));
+        const reciboContentDiv = document.getElementById('reciboPos').querySelector('.recibo-content');
+        reciboContentDiv.querySelectorAll('p').forEach(p => {
+            p.style.fontSize = `${this.fontSize}px`;
+        });
+        reciboContentDiv.querySelector('img').style.maxWidth = '150px';
+    },
+
+    // --- Funciones de Exportación ---
+    exportarExcel() {
+      const registros = this.getRegistros();
+      if (registros.length === 0) {
+        alert("No hay registros para exportar.");
+        return;
+      }
+
+      // Encabezados del CSV (compatibles con Excel)
+      let csv = "Fecha,Movimiento,OC,Unidades,Costeo,Tipo,Componentes,Liquidacion,Entrega,Recibe,Producto,Observaciones\n";
+
+      registros.forEach(r => {
+        // Función auxiliar para "escapar" los valores para CSV
+        // Esto es crucial para que Excel no se confunda con comas o saltos de línea dentro de los campos
+        const escapeCsvValue = (value) => {
+          if (value === null || value === undefined) return '';
+          let stringValue = String(value);
+          // Si el valor contiene comas, comillas dobles o saltos de línea,
+          // se encierra entre comillas dobles y se escapan las comillas dobles internas
+          if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n') || stringValue.includes('\r')) {
+            return `"${stringValue.replace(/"/g, '""')}"`;
+          }
+          return stringValue;
+        };
+
+        const rowData = [
+          escapeCsvValue(r.fecha),
+          escapeCsvValue(r.movimiento),
+          escapeCsvValue(r.oc),
+          escapeCsvValue(r.unidades),
+          escapeCsvValue(r.costeo),
+          escapeCsvValue(r.tipo || ''),
+          escapeCsvValue(r.componentes || ''),
+          escapeCsvValue(r.liquidacion || ''),
+          escapeCsvValue(r.entrega),
+          escapeCsvValue(r.recibe),
+          escapeCsvValue(r.producto_tipo),
+          escapeCsvValue(r.observaciones || '')
+        ];
+        csv += rowData.join(",") + "\n";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "registros_texsion.csv"; // Nombre del archivo que Excel reconocerá
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert("Datos exportados a Excel (CSV) exitosamente.");
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => app.init());
+</script>
+</body>
+</html>
